@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.Data.SqlClient">
+            <HintPath>..\DbAccess.Tests\bin\Debug\net10.0\Microsoft.Data.SqlClient.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+</Project>
