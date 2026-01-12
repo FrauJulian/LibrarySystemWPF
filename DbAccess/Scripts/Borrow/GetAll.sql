@@ -7,6 +7,8 @@
        pe.IdNumber   as PersonIdNumber,
        pe.Firstname  as PersonFirstname,
        pe.Lastname   as PersonLastname,
+       pe.Lastname   as PersonAddress,
+       pe.Lastname   as PersonPhone,
 
        b.Id          as BookId,
        b.InternId    as BookInternId,

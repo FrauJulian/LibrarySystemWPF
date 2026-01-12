@@ -26,7 +26,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public IValueConverter IsBookBorrowedConverter { get; set; } = null!;
     public ICommand BookSearchCommand { get; set; } = null!;
+    public ICommand SyncCommand { get; set; } = null!;
     public ICommand PersonSearchCommand { get; set; } = null!;
+    public ICommand BorrowSearchCommand { get; set; } = null!;
     public ICommand AddPersonCommand { get; set; } = null!;
     public ICommand AddBookCommand { get; set; } = null!;
     public ICommand BorrowCommand { get; set; } = null!;
@@ -34,6 +36,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ICommand AddPublisherCommand { get; set; } = null!;
     public ICommand DeleteBookCommand { get; set; } = null!;
     public ICommand DeletePersonCommand { get; set; } = null!;
+    public ICommand ReturnBookCommand { get; set; } = null!;
 
     public PersonModel NewPerson
     {
@@ -66,6 +69,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             _searchText = value;
             BookSearchCommand.Execute(_searchText);
             PersonSearchCommand.Execute(_searchText);
+            BorrowSearchCommand.Execute(_searchText);
             OnPropertyChanged();
             OnPropertyChanged(nameof(_searchText));
         }

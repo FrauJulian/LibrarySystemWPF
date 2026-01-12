@@ -22,7 +22,6 @@ public partial class App : Application
         catch (Exception exception)
         {
             MessageBox.Show(exception.Message);
-            throw;
         }
     }
 }

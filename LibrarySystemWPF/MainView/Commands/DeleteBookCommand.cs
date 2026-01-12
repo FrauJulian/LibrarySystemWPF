@@ -28,7 +28,7 @@ public class DeleteBookCommand(MainViewModel viewModel, IBook bookAccess) : ICom
         }
 
         bookAccess.DeleteByInternId(book.InternId);
-        viewModel.Books = bookAccess.GetAll();
+        viewModel.SyncCommand.Execute(false);
         MessageBox.Show("Buch gelöscht!");
     }
 

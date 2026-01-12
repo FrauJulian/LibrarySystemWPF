@@ -4,7 +4,7 @@ using LibrarySystemWPF.MainView.ViewModels;
 
 namespace LibrarySystemWPF.MainView.Commands;
 
-internal class PersonSearchCommand(MainViewModel viewModel, IPerson peronAccess) : ICommand
+internal class PersonSearchCommand(MainViewModel viewModel) : ICommand
 {
     public bool CanExecute(object? parameter)
     {
@@ -17,11 +17,10 @@ internal class PersonSearchCommand(MainViewModel viewModel, IPerson peronAccess)
 
         if (string.IsNullOrWhiteSpace(searchString))
         {
-            viewModel.Persons = peronAccess.GetAll();
+            viewModel.SyncCommand.Execute(false);
             return;
         }
 
-        var isbnInput = int.TryParse(searchString, out var isbnNumber);
         viewModel.Persons = viewModel.Persons
             .Where(person =>
                 person.IdNumber.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)

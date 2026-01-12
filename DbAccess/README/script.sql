@@ -3,6 +3,8 @@
     [IdNumber] varchar(30) NOT NULL,
     [Firstname] varchar(MAX) NOT NULL,
     [Lastname] varchar(MAX) NOT NULL,
+    [Address] varchar(MAX) NOT NULL,
+    [Phone] varchar(MAX) NOT NULL,
     CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [UQ_Person_Id] UNIQUE ([Id]),
     CONSTRAINT [UQ_Person_IdNumber] UNIQUE ([IdNumber])

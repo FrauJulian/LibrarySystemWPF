@@ -4,7 +4,7 @@ using LibrarySystemWPF.MainView.ViewModels;
 
 namespace LibrarySystemWPF.MainView.Commands;
 
-internal class BookSearchCommand(MainViewModel viewModel, IBook bookAccess) : ICommand
+internal class BookSearchCommand(MainViewModel viewModel) : ICommand
 {
     public bool CanExecute(object? parameter)
     {
@@ -17,7 +17,7 @@ internal class BookSearchCommand(MainViewModel viewModel, IBook bookAccess) : IC
 
         if (string.IsNullOrWhiteSpace(searchString))
         {
-            viewModel.Books = bookAccess.GetAll();
+            viewModel.SyncCommand.Execute(false);
             return;
         }
 
@@ -26,7 +26,7 @@ internal class BookSearchCommand(MainViewModel viewModel, IBook bookAccess) : IC
             .Where(book =>
                 book.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
                 || book.InternId.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
-                || book.Subject.ToString()!.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
+                || book.Subject!.ToString().Contains(searchString, StringComparison.CurrentCultureIgnoreCase)
                 || $"{book.Author.FirstName} {book.Author.LastName}".Contains(searchString,
                     StringComparison.CurrentCultureIgnoreCase)
                 || (isbnInput && book.Isbn == isbnNumber))

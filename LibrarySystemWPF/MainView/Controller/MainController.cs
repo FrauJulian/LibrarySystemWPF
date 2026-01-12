@@ -5,12 +5,11 @@ using DbAccess.Access.Borrow;
 using DbAccess.Access.Person;
 using DbAccess.Access.Publisher;
 using LibrarySystemWPF.MainView.Commands;
-using LibrarySystemWPF.MainView.Converters;
 using LibrarySystemWPF.MainView.ViewModels;
 
 namespace LibrarySystemWPF.MainView.Controller;
 
-internal class MainController(Core dbCore)
+public class MainController(Core dbCore)
 {
     private readonly Author _authorAccess = new(dbCore);
     private readonly Book _bookAccess = new(dbCore);
@@ -31,7 +30,7 @@ internal class MainController(Core dbCore)
         return view;
     }
 
-    private void LoadData(MainViewModel viewModel)
+    internal void LoadData(MainViewModel viewModel)
     {
         viewModel.Books = _bookAccess.GetAll();
         viewModel.Persons = _personAccess.GetAll();
@@ -39,18 +38,31 @@ internal class MainController(Core dbCore)
         viewModel.Authors = _authorAccess.GetAll();
         viewModel.Publishers = _publisherAccess.GetAll();
         viewModel.SubjectValues = _bookAccess.GetAllSubjects();
+
+        IsBorrowed(viewModel);
+    }
+
+    private void IsBorrowed(MainViewModel viewModel)
+    {
+        foreach (var book in viewModel.Books)
+        {
+            book.IsBorrowed = viewModel.Borrows.Any(b => b.Book.InternId == book!.InternId && b.ReturnDate == null);
+        }
     }
 
     private void LoadCommands(MainViewModel viewModel)
     {
-        viewModel.BookSearchCommand = new BookSearchCommand(viewModel, _bookAccess);
-        viewModel.PersonSearchCommand = new PersonSearchCommand(viewModel, _personAccess);
+        viewModel.BookSearchCommand = new BookSearchCommand(viewModel);
+        viewModel.PersonSearchCommand = new PersonSearchCommand(viewModel);
         viewModel.AddPersonCommand = new AddPersonCommand(viewModel, _personAccess);
         viewModel.AddBookCommand = new AddBookCommand(viewModel, _bookAccess);
-        viewModel.BorrowCommand = new BorrowCommand(viewModel, _borrowAccess);
+        viewModel.BorrowCommand = new BorrowCommand(viewModel, _bookAccess, _borrowAccess);
         viewModel.AddAuthorCommand = new AddAuthorCommand(viewModel);
         viewModel.AddPublisherCommand = new AddPublisherCommand(viewModel);
         viewModel.DeleteBookCommand = new DeleteBookCommand(viewModel, _bookAccess);
         viewModel.DeletePersonCommand = new DeletePersonCommand(viewModel, _personAccess);
+        viewModel.SyncCommand = new SyncCommand(viewModel, this);
+        viewModel.ReturnBookCommand = new ReturnBookCommand(viewModel, _borrowAccess);
+        viewModel.BorrowSearchCommand = new BorrowSearchCommand(viewModel);
     }
 }

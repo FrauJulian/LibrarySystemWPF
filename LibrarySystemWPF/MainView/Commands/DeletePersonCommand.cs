@@ -27,7 +27,7 @@ public class DeletePersonCommand(MainViewModel viewModel, IPerson personAccess) 
         }
 
         personAccess.DeleteByIdNumber(person.IdNumber);
-        viewModel.Persons = personAccess.GetAll();
+        viewModel.SyncCommand.Execute(false);
         MessageBox.Show("Person gelöscht!");
     }
 

@@ -6,6 +6,7 @@ public class PersonModel
     public string IdNumber { get; set; } = null!;
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
+    public string Address { get; set; } = null!;
     public string Phone { get; set; } = null!;
     public string FullName
     {
@@ -16,9 +17,4 @@ public class PersonModel
             LastName = value;
         }
     }
-    public string Street { get; set; } = null!;
-    public string HouseNumber { get; set; } = null!;
-    public string City { get; set; } = null!;
-    public string Postal { get; set; } = null!;
-    public string Address => $"{Street} {HouseNumber}, {Postal} {City}";
 }

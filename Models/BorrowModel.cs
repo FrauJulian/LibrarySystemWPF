@@ -7,5 +7,6 @@ public class BorrowModel
     public BookModel Book { get; set; } = null!;
     public DateTime BorrowDate { get; set; }
     public DateTime? ReturnDate { get; set; }
+    public bool IsReturned => ReturnDate != null;
     public DateTime? LatestReturnDate { get; set; }
 }

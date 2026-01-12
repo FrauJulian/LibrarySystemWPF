@@ -57,7 +57,7 @@ public partial class AddBookCommand(MainViewModel viewModel, IBook bookAccess) :
         }
         
         bookAccess.Insert(book);
-        viewModel.Books = bookAccess.GetAll();
+        viewModel.SyncCommand.Execute(false);
         viewModel.NewBook = new BookModel();
         
         MessageBox.Show("Buch hinzugefügt!");

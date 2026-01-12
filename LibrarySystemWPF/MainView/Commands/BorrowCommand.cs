@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using DbAccess.Access.Book;
 using DbAccess.Access.Borrow;
 using LibrarySystemWPF.MainView.ViewModels;
 using LibrarySystemWPF.PopupView.ViewModels;
@@ -7,7 +8,7 @@ using Models;
 
 namespace LibrarySystemWPF.MainView.Commands;
 
-public class BorrowCommand(MainViewModel viewModel, IBorrow borrowAccess) : ICommand
+public class BorrowCommand(MainViewModel viewModel, IBook bookAccess, IBorrow borrowAccess) : ICommand
 {
     public bool CanExecute(object? parameter)
     {
@@ -66,7 +67,7 @@ public class BorrowCommand(MainViewModel viewModel, IBorrow borrowAccess) : ICom
         };
 
         borrowAccess.Insert(newBorrow);
-        viewModel.Borrows = borrowAccess.GetAll();
+        viewModel.SyncCommand.Execute(false);
     }
 
     public event EventHandler? CanExecuteChanged;

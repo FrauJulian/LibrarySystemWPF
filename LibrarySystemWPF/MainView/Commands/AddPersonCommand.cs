@@ -19,9 +19,17 @@ internal class AddPersonCommand(MainViewModel viewModel, IPerson personAccess) :
 
         if (string.IsNullOrWhiteSpace(person.IdNumber)
             || string.IsNullOrWhiteSpace(person.FirstName)
-            || string.IsNullOrWhiteSpace(person.LastName))
+            || string.IsNullOrWhiteSpace(person.LastName)
+            || string.IsNullOrWhiteSpace(person.Address)
+            || string.IsNullOrWhiteSpace(person.Phone))
         {
             MessageBox.Show("Eine der nötigen Angaben fehlt.");
+            return;
+        }
+
+        if (!person.Phone.StartsWith("+"))
+        {
+            MessageBox.Show("Ungültige Telefonnummer!");
             return;
         }
 
@@ -32,7 +40,7 @@ internal class AddPersonCommand(MainViewModel viewModel, IPerson personAccess) :
         }
 
         personAccess.Insert(person);
-        viewModel.Persons = personAccess.GetAll();
+        viewModel.SyncCommand.Execute(false);
         viewModel.NewPerson = new PersonModel();
         
         MessageBox.Show("Person hinzugefügt!");

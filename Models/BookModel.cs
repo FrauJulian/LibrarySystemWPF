@@ -14,6 +14,7 @@ public class BookModel : INotifyPropertyChanged
     public int? Isbn { get; set; }
     public string Title { get; set; } = null!;
     public string? Subject { get; set; }
+    public bool IsBorrowed { get; set; }
 
     public PublisherModel Publisher
     {

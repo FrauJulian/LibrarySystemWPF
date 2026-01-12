@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:viewModel="clr-namespace:LibrarySystemWPF.MainView.ViewModels"
-        xmlns:converters="clr-namespace:LibrarySystemWPF.MainView.Converters"
+        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         Title="Bibliothek" Height="500" Width="1050" ResizeMode="CanMinimize"
         WindowState="Normal"
         WindowStartupLocation="CenterScreen">
@@ -11,10 +11,6 @@
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
-    
-    <Window.Resources>
-        <converters:IsBookBorrowedConverter x:Key="IsBookBorrowedConverter"/>
-    </Window.Resources>
     
     <Grid>
         <TabControl>
@@ -25,6 +21,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
+                    
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="Auto" Content="Reload" Margin="0,15,15,0" Command="{Binding SyncCommand}"/>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <StackPanel Margin="5,5,5,0">
@@ -106,51 +104,50 @@
                     <ListView Grid.Row="2" ItemsSource="{Binding Books}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
-                                <GridViewColumn DisplayMemberBinding="{Binding InternId}" Header="Kennung" Width="85" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" Width="150" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Subject}" Header="Themengebiet" Width="100"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Isbn}" Header="Isbn" Width="65" />
+                                <GridViewColumn DisplayMemberBinding="{Binding InternId}" Header="Kennung" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Subject}" Header="Themengebiet" Width="Auto"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Isbn}" Header="Isbn" Width="Auto" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Author.FullName}" Header="Autor Name"
-                                                Width="100" />
+                                                Width="Auto" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Publisher.Name}" Header="Verlag Name"
-                                                Width="100" />
+                                                Width="Auto" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Publisher.Location}"
-                                                Header="Verlag Herkunft" Width="90" />
+                                                Header="Verlag Herkunft" Width="Auto" />
                                 <GridViewColumn DisplayMemberBinding="{Binding PublishDate, StringFormat=dd.MM.yyyy}"
-                                                Header="Veröffentlichung" Width="95" />
-                                <GridViewColumn Header="Verleihen" Width="70">
+                                                Header="Veröffentlichung" Width="Auto" />
+                                <GridViewColumn Header="Verleihen" Width="Auto">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Ausleihen"
-                                                    Command="{Binding DataContext.BorrowCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}">
-                                                <Button.IsEnabled>
-                                                    <MultiBinding Converter="{StaticResource IsBookBorrowedConverter}">
-                                                        <Binding /> 
-                                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ListView}" />
-                                                    </MultiBinding>
-                                                </Button.IsEnabled>
-                                            </Button>
+                                                    Command="{Binding DataContext.BorrowCommand,
+                          RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=Content}"/>
+
+
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Löschen" Width="60">
+                                <GridViewColumn Header="Löschen" Width="Auto">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Löschen"
                                                     Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}">
-                                                <Button.IsEnabled>
-                                                    <MultiBinding Converter="{StaticResource IsBookBorrowedConverter}">
-                                                        <Binding /> 
-                                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ListView}" />
-                                                    </MultiBinding>
-                                                </Button.IsEnabled>
+                                                    CommandParameter="{Binding}" IsEnabled="{Binding }">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsBorrowed}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
                                             </Button>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -158,12 +155,14 @@
             </TabItem>
 
             <TabItem Header="Schüler">
-                <Grid Margin="10">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
+                    
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="Auto" Content="Reload" Margin="0,15,15,0" Command="{Binding SyncCommand}"/>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <StackPanel Margin="5,5,5,0">
@@ -207,12 +206,12 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
                                 <GridViewColumn DisplayMemberBinding="{Binding IdNumber}" Header="Ausweisnummer"
-                                                Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding FirstName}" Header="Vorname" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding LastName}" Header="Nachname" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Telefon" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Adresse" Width="100" />
-                                <GridViewColumn Header="Löschen" Width="60">
+                                                Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding FirstName}" Header="Vorname" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding LastName}" Header="Nachname" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Telefon" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Adresse" Width="Auto" />
+                                <GridViewColumn Header="Löschen" Width="Auto">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Löschen"
@@ -230,54 +229,54 @@
             </TabItem>
             
             <TabItem Header="Verleihungen">
-                                <Grid Margin="10">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-
-                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                        <StackPanel Margin="5,5,5,0">
-                            <TextBlock Text="*Ausweisnummer:" />
-                            <TextBox Text="{Binding NewPerson.IdNumber}" Width="120" Height="22" />
-                        </StackPanel>
-                        
-                        <StackPanel Margin="5,5,5,0">
-                            <TextBlock Text="*Vorname:" />
-                            <TextBox Text="{Binding NewPerson.FirstName}" Width="120" Height="22" />
-                        </StackPanel>
-                        
-                        <StackPanel Margin="5,5,5,0">
-                            <TextBlock Text="*Nachname:" />
-                            <TextBox Text="{Binding NewPerson.LastName}" Width="120" Height="22" />
-                        </StackPanel>
-                        
-                        <Button Content="Hinzufügen"
-                                Command="{Binding AddPersonCommand}"
-                                CommandParameter="{Binding NewPerson}"
-                                Height="22"
-                                Margin="8,10,0,10" />
-                    </StackPanel>
+                    
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="Auto" Content="Reload" Margin="0,15,15,0" Command="{Binding SyncCommand}"/>
 
                     <TextBox
                         Grid.Row="1"
                         Margin="0,8,0,8"
                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <ListView Grid.Row="2" ItemsSource="{Binding Borrows}">
+                    <ListView Grid.Row="2">
+                        <ListView.Resources>
+                            <CollectionViewSource x:Key="BorrowsView"
+                                                  Source="{Binding Borrows}">
+                                <CollectionViewSource.SortDescriptions>
+                                    <componentModel:SortDescription PropertyName="IsReturned"
+                                                     Direction="Ascending" />
+                                    <componentModel:SortDescription PropertyName="ReturnDate"
+                                                     Direction="Ascending" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </ListView.Resources>
+                        
+                        <ListView.ItemsSource>
+                            <Binding Source="{StaticResource BorrowsView}" />
+                        </ListView.ItemsSource>
+                        
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
-                                <GridViewColumn DisplayMemberBinding="{Binding Person.FullName}" Header="Person" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Book.InternId}" Header="Buch Kennung" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Book.Title}" Header="Buch Name" Width="100" />
-                                <GridViewColumn DisplayMemberBinding="{Binding BorrowDate, StringFormat=dd.MM.yyyy}" Header="Verleihungs Datum" Width="100" />
-                                <GridViewColumn Header="Zurückgabe Datum" Width="100">
-                                    <GridViewColumn.DisplayMemberBinding>
-                                        <Binding Path="ReturnDate" StringFormat="dd.MM.yyyy" TargetNullValue="/" />
-                                    </GridViewColumn.DisplayMemberBinding>
+                                <GridViewColumn DisplayMemberBinding="{Binding Person.FullName}" Header="Person" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Book.InternId}" Header="Buch Kennung" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Book.Title}" Header="Buch Name" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding BorrowDate, StringFormat=dd.MM.yyyy hh:mm}" Header="Verleih Datum" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding ReturnDate, StringFormat=dd.MM.yyyy hh:mm}" Header="Rückgabe Datum" Width="Auto" />
+                                <GridViewColumn DisplayMemberBinding="{Binding LatestReturnDate, StringFormat=dd.MM.yyyy hh:mm}" Header="spätestes zurückgabe Datum" Width="Auto" />
+                                <GridViewColumn Header="Zurückgegeben" Width="Auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Zurückgegeben"
+                                                    Command="{Binding DataContext.ReturnBookCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding ReturnDate, StringFormat=dd.MM.yyyy}" Header="Letztes Zurückgabe Datum" Width="100" />
                             </GridView>
                         </ListView.View>
                     </ListView>

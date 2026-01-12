@@ -17,7 +17,9 @@ public class Person(IDbCore dbCore) : IPerson
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                 IdNumber = reader.GetString(reader.GetOrdinal("IdNumber")),
                 FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                LastName = reader.GetString(reader.GetOrdinal("LastName"))
+                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                Address = reader.GetString(reader.GetOrdinal("Address")),
+                Phone = reader.GetString(reader.GetOrdinal("LastName"))
             });
 
         return personList;
@@ -45,6 +47,8 @@ public class Person(IDbCore dbCore) : IPerson
             person.IdNumber = reader.GetString(reader.GetOrdinal("IdNumber"));
             person.FirstName = reader.GetString(reader.GetOrdinal("FirstName"));
             person.LastName = reader.GetString(reader.GetOrdinal("LastName"));
+            person.Address = reader.GetString(reader.GetOrdinal("Address"));
+            person.Phone = reader.GetString(reader.GetOrdinal("LastName"));
         }
 
         return person;
@@ -68,7 +72,7 @@ public class Person(IDbCore dbCore) : IPerson
     public void Insert(PersonModel model)
     {
         const string sql =
-            "INSERT INTO Person (IdNumber, Firstname, Lastname) VALUES (@IdNumber, @Firstname, @Lastname)";
+            "INSERT INTO Person (IdNumber, Firstname, Lastname, Address, Phone) VALUES (@IdNumber, @Firstname, @Lastname, @Address, @Phone)";
         var parameters = new IParamValue[]
         {
             new ParamValue<string>
@@ -85,6 +89,16 @@ public class Person(IDbCore dbCore) : IPerson
             {
                 Name = "@Lastname",
                 Value = model.LastName
+            },
+            new ParamValue<string>
+            {
+                Name = "@Address",
+                Value = model.Address
+            },
+            new ParamValue<string>
+            {
+                Name = "@Phone",
+                Value = model.Phone
             }
         };
 

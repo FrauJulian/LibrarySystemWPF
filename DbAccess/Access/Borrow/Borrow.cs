@@ -20,7 +20,9 @@ public class Borrow(IDbCore dbCore) : IBorrow
                     Id = reader.GetInt32(reader.GetOrdinal("PersonId")),
                     IdNumber = reader.GetString(reader.GetOrdinal("PersonIdNumber")),
                     FirstName = reader.GetString(reader.GetOrdinal("PersonFirstName")),
-                    LastName = reader.GetString(reader.GetOrdinal("PersonLastName"))
+                    LastName = reader.GetString(reader.GetOrdinal("PersonLastName")),
+                    Address = reader.GetString(reader.GetOrdinal("PersonAddress")),
+                    Phone = reader.GetString(reader.GetOrdinal("PersonPhone"))
                 },
                 Book = new BookModel
                 {
@@ -78,7 +80,9 @@ public class Borrow(IDbCore dbCore) : IBorrow
                     Id = reader.GetInt32(reader.GetOrdinal("PersonId")),
                     IdNumber = reader.GetString(reader.GetOrdinal("PersonIdNumber")),
                     FirstName = reader.GetString(reader.GetOrdinal("PersonFirstName")),
-                    LastName = reader.GetString(reader.GetOrdinal("PersonLastName"))
+                    LastName = reader.GetString(reader.GetOrdinal("PersonLastName")),
+                    Address = reader.GetString(reader.GetOrdinal("Address")),
+                    Phone = reader.GetString(reader.GetOrdinal("LastName"))
                 },
                 Book = new BookModel
                 {
@@ -111,7 +115,7 @@ public class Borrow(IDbCore dbCore) : IBorrow
         return borrowList;
     }
 
-    public void UpdateReturnDate(int id, DateTime returnDate)
+    public void UpdateReturnDate(int? id)
     {
         const string sql = "UPDATE Borrow SET ReturnDate = @ReturnDate WHERE Id = @Id;";
         var parameters = new IParamValue[]
@@ -119,9 +123,9 @@ public class Borrow(IDbCore dbCore) : IBorrow
             new ParamValue<DateTime>
             {
                 Name = "@ReturnDate",
-                Value = returnDate
+                Value = DateTime.Now
             },
-            new ParamValue<int>
+            new ParamValue<int?>
             {
                 Name = "@Id",
                 Value = id
